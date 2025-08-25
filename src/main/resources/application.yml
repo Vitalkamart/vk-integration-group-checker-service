@@ -14,3 +14,8 @@ vk:
 camel:
   springboot:
     main-run-controller: true
+
+logging:
+  level:
+    com.example.vkuserservice: DEBUG
+    org.apache.camel: WARN
