@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: vk-integration-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vk_service
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  security:
+    user:
+      name: admin
+      password: password
+
+server:
+  port: 8080
+
+logging:
+  level:
+    ru.mart: DEBUG
+    org.apache.camel: INFO
+
+camel:
+  springboot:
+    main-run-controller: true
+
+vk:
+  api:
+    base-url: https://api.vk.com/method
+    version: 5.199
