@@ -4,9 +4,10 @@ server:
 spring:
   application:
     name: vk-user-service
-  config:
-    activate:
-      on-profile: test
+  security:
+    user:
+      name: admin
+      password: password
 
 vk:
   api:
@@ -14,11 +15,19 @@ vk:
     version: 5.199
     service-token: ${VK_SERVICE_TOKEN:7b36aff47b36aff47b36aff428780fbca877b367b36aff4139daac0d1ad83670d22b756}
 
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
 camel:
   springboot:
     main-run-controller: true
 
 logging:
   level:
-    com.example.vkuserservice: DEBUG
+    ru.mart.vkservice: DEBUG
     org.apache.camel: WARN

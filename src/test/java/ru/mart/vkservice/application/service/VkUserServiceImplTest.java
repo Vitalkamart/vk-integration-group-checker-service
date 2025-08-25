@@ -14,9 +14,8 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class VkUserServiceImplTest {
-    private static final Long USER_ID = 12345L;
     public static final Long GROUP_ID = 67890L;
-
+    private static final Long USER_ID = 12345L;
     @Mock
     private VkApiPort vkApiPort;
 
