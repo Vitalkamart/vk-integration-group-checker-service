@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: vk-user-service
+  config:
+    activate:
+      on-profile: test
 
 vk:
   api:
