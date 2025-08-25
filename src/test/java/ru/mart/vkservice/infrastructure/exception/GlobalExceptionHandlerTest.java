@@ -21,14 +21,11 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleResponseStatusException_ShouldReturnCorrectResponse() {
-        // Arrange
         when(webRequest.getDescription(anyBoolean())).thenReturn("uri=/test");
         ResponseStatusException ex = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Test error");
 
-        // Act
         ResponseEntity<ErrorResponseDto> response = handler.handleResponseStatusException(ex, webRequest);
 
-        // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("Test error", response.getBody().getMessage());
@@ -36,14 +33,11 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleMissingRequestHeaderException_ShouldReturnCorrectResponse() {
-        // Arrange
         when(webRequest.getDescription(anyBoolean())).thenReturn("uri=/test");
         MissingRequestHeaderException ex = new MissingRequestHeaderException("vk_service_token", null);
 
-        // Act
         ResponseEntity<ErrorResponseDto> response = handler.handleMissingRequestHeaderException(ex, webRequest);
 
-        // Assert
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("vk_service_token header is required", response.getBody().getMessage());
@@ -51,14 +45,11 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleGlobalException_ShouldReturnInternalServerError() {
-        // Arrange
         when(webRequest.getDescription(anyBoolean())).thenReturn("uri=/test");
         Exception ex = new RuntimeException("Test exception");
 
-        // Act
         ResponseEntity<ErrorResponseDto> response = handler.handleGlobalException(ex, webRequest);
 
-        // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals("An unexpected error occurred", response.getBody().getMessage());

@@ -1,6 +1,5 @@
 package ru.mart.vkservice.infrastructure.camel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.test.junit5.CamelTestSupport;
 import org.junit.jupiter.api.Test;
@@ -11,10 +10,9 @@ class HistoryIntegrationTest extends CamelTestSupport {
 
     @Override
     protected RouteBuilder createRouteBuilder() {
-        return new VkApiRoutes(new ObjectMapper()) {
+        return new VkApiRoutes() {
             @Override
             public void configure() throws Exception {
-                // Только маршрут истории для тестирования
                 from("direct:saveRequestHistory")
                         .routeId("save-request-history")
                         .log("Сохранение истории запроса")
