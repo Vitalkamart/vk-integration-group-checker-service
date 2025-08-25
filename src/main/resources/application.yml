@@ -22,6 +22,8 @@ springdoc:
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
+    display-request-duration: true
+    filter: true
 
 camel:
   springboot:
