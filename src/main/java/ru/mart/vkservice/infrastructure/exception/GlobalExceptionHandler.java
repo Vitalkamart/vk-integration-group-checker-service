@@ -12,7 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mart.vkservice.infrastructure.controller.dto.ErrorResponseDto;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestControllerAdvice
@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
         log.warn("Validation error: {}", errorMessage);
 
         ErrorResponseDto errorResponse = new ErrorResponseDto(
-                Instant.now(),
+                LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Failed",
                 errorMessage,
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
         log.warn("Constraint violation: {}", ex.getMessage());
 
         ErrorResponseDto errorResponse = new ErrorResponseDto(
-                Instant.now(),
+                LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Constraint Violation",
                 ex.getMessage(),
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
         log.warn("Missing header: {}", errorMessage);
 
         ErrorResponseDto errorResponse = new ErrorResponseDto(
-                Instant.now(),
+                LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Missing Required Header",
                 errorMessage,
@@ -84,7 +84,7 @@ public class GlobalExceptionHandler {
         HttpStatus httpStatus = HttpStatus.valueOf(ex.getStatusCode().value());
 
         ErrorResponseDto errorResponse = new ErrorResponseDto(
-                Instant.now(),
+                LocalDateTime.now(),
                 ex.getStatusCode().value(),
                 httpStatus.getReasonPhrase(),
                 ex.getReason(),
@@ -101,7 +101,7 @@ public class GlobalExceptionHandler {
         log.error("Internal server error: {}", ex.getMessage(), ex);
 
         ErrorResponseDto errorResponse = new ErrorResponseDto(
-                Instant.now(),
+                LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
                 "An unexpected error occurred",

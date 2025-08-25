@@ -31,10 +31,14 @@ dependencies {
     implementation("org.apache.camel.springboot:camel-http-starter:4.14.0")
     implementation("org.apache.camel.springboot:camel-jackson-starter:4.14.0")
 
+    // Jackson
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.apache.camel:camel-test-spring-junit5:4.14.0")
+    testImplementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 }
 
 tasks.withType<Test> {

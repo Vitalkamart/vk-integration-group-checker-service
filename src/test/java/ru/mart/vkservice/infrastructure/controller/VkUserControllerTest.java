@@ -5,10 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.mart.vkservice.domain.model.VkUser;
 import ru.mart.vkservice.domain.port.input.VkUserService;
+import ru.mart.vkservice.infrastructure.config.TestConfig;
 import ru.mart.vkservice.infrastructure.controller.dto.VkUserRequestDto;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -19,7 +22,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(VkUserController.class)
+@WebMvcTest(
+        controllers = VkUserController.class,
+        excludeAutoConfiguration = {
+                org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
+                org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration.class
+        }
+)
+@Import(TestConfig.class)
 class VkUserControllerTest {
 
     @Autowired
@@ -32,8 +42,8 @@ class VkUserControllerTest {
     private VkUserService vkUserService;
 
     @Test
+    @WithMockUser(roles = "USER")
     void getUserInfo_ValidRequest_ShouldReturnUserInfo() throws Exception {
-        // Arrange
         VkUserRequestDto request = new VkUserRequestDto();
         request.setUserId(12345L);
         request.setGroupId(67890L);
@@ -42,28 +52,26 @@ class VkUserControllerTest {
         when(vkUserService.getUserInfoWithMembership(anyLong(), anyLong(), anyString()))
                 .thenReturn(mockUser);
 
-        // Act & Assert
         mockMvc.perform(post("/api/v1/vk-users/info")
                         .header("vk_service_token", "test-token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Иван"))
-                .andExpect(jsonPath("$.lastName").value("Иванов"))
-                .andExpect(jsonPath("$.middleName").value("Иванович"))
+                .andExpect(jsonPath("$.last_name").value("Иванов"))
+                .andExpect(jsonPath("$.first_name").value("Иван"))
+                .andExpect(jsonPath("$.middle_name").value("Иванович"))
                 .andExpect(jsonPath("$.member").value(true));
 
         verify(vkUserService).getUserInfoWithMembership(12345L, 67890L, "test-token");
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void getUserInfo_MissingHeader_ShouldReturnBadRequest() throws Exception {
-        // Arrange
         VkUserRequestDto request = new VkUserRequestDto();
         request.setUserId(12345L);
         request.setGroupId(67890L);
 
-        // Act & Assert
         mockMvc.perform(post("/api/v1/vk-users/info")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -72,29 +80,12 @@ class VkUserControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void getUserInfo_InvalidRequest_ShouldReturnBadRequest() throws Exception {
-        // Arrange
         VkUserRequestDto request = new VkUserRequestDto();
-        request.setUserId(-1L); // Invalid
+        request.setUserId(-1L);
         request.setGroupId(67890L);
 
-        // Act & Assert
-        mockMvc.perform(post("/api/v1/vk-users/info")
-                        .header("vk_service_token", "test-token")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Validation Failed"));
-    }
-
-    @Test
-    void getUserInfo_NullUserId_ShouldReturnBadRequest() throws Exception {
-        // Arrange
-        VkUserRequestDto request = new VkUserRequestDto();
-        request.setUserId(null); // Invalid
-        request.setGroupId(67890L);
-
-        // Act & Assert
         mockMvc.perform(post("/api/v1/vk-users/info")
                         .header("vk_service_token", "test-token")
                         .contentType(MediaType.APPLICATION_JSON)

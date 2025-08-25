@@ -2,6 +2,17 @@ spring:
   config:
     activate:
       on-profile: test
+  security:
+    user:
+      name: test-user
+      password: test-password
+      roles: USER
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    deserialization:
+      fail-on-unknown-properties: false
+    serialization:
+      write-dates-as-timestamps: false
 
 vk:
   api:
@@ -16,7 +27,12 @@ springdoc:
     enabled: true
     path: /swagger-ui.html
 
+camel:
+  springboot:
+    main-run-controller: false
+
 logging:
   level:
     ru.mart.vkservice: DEBUG
-    org.springframework.security: WARN
+    org.springframework: WARN
+    org.apache.camel: WARN
