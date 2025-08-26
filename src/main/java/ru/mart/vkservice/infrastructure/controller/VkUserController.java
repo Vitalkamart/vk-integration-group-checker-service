@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mart.vkservice.domain.model.VkUser;
-import ru.mart.vkservice.domain.port.input.VkUserService;
+import ru.mart.vkservice.infrastructure.adapter.output.CamelVkApiAdapter;
 import ru.mart.vkservice.infrastructure.controller.dto.VkUserRequestDto;
 import ru.mart.vkservice.infrastructure.controller.dto.VkUserResponseDto;
 
@@ -25,7 +25,7 @@ import ru.mart.vkservice.infrastructure.controller.dto.VkUserResponseDto;
 @Tag(name = "VK Users", description = "API для получения информации о пользователях VK")
 public class VkUserController {
 
-    private final VkUserService vkUserService;
+    private final CamelVkApiAdapter vkApiAdapter;
 
     @Operation(
             summary = "Получить информацию о пользователе VK",
@@ -70,7 +70,7 @@ public class VkUserController {
 
         log.info("Received request for user ID: {}, group ID: {}", request.getUserId(), request.getGroupId());
 
-        VkUser user = vkUserService.getUserInfoWithMembership(
+        VkUser user = vkApiAdapter.getUserInfoWithMembership(
                 request.getUserId(), request.getGroupId(), serviceToken);
 
         VkUserResponseDto response = new VkUserResponseDto(

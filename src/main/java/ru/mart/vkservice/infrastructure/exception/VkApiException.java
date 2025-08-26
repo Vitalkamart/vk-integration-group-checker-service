@@ -1,14 +1,17 @@
 package ru.mart.vkservice.infrastructure.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+@Getter
 public class VkApiException extends ResponseStatusException {
-    public VkApiException(HttpStatus status, String reason) {
-        super(status, reason);
-    }
+    private final Integer vkErrorCode;
+    private final String vkErrorMessage;
 
-    public VkApiException(HttpStatus status, String reason, Throwable cause) {
-        super(status, reason, cause);
+    public VkApiException(Integer vkErrorCode, String vkErrorMessage) {
+        super(HttpStatus.BAD_REQUEST, "VK API Error: " + vkErrorMessage);
+        this.vkErrorCode = vkErrorCode;
+        this.vkErrorMessage = vkErrorMessage;
     }
 }

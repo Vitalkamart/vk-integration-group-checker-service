@@ -8,12 +8,6 @@ spring:
     user:
       name: admin
       password: password
-  jackson:
-    property-naming-strategy: SNAKE_CASE # Автоматически маппит snake_case в camelCase
-    deserialization:
-      fail-on-unknown-properties: false # Игнорировать неизвестные поля
-    serialization:
-      write-dates-as-timestamps: false
 
 vk:
   api:

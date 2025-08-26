@@ -110,4 +110,21 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(VkApiException.class)
+    public ResponseEntity<ErrorResponseDto> handleVkApiException(
+            VkApiException ex, WebRequest request) {
+
+        log.warn("VK API Error {}: {}", ex.getVkErrorCode(), ex.getVkErrorMessage());
+
+        ErrorResponseDto errorResponse = new ErrorResponseDto(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "VK API Error",
+                String.format("VK API Error %d: %s", ex.getVkErrorCode(), ex.getVkErrorMessage()),
+                request.getDescription(false).replace("uri=", "")
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
