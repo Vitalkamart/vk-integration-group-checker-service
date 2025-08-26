@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.ProducerTemplate;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import ru.mart.vkservice.domain.model.VkUser;
@@ -19,7 +18,6 @@ public class CamelVkApiAdapter {
 
     private final ProducerTemplate producerTemplate;
 
-    @Cacheable(value = "vkUsers", key = "#userId + '_' + #groupId", unless = "#result == null")
     public VkUser getUserInfoWithMembership(
             @NotNull @Positive Long userId,
             @NotNull @Positive Long groupId,
@@ -29,13 +27,19 @@ public class CamelVkApiAdapter {
 
         try {
             UserGroupRequest request = new UserGroupRequest(userId, groupId);
-            return producerTemplate.requestBodyAndHeader(
+            VkUser result = producerTemplate.requestBodyAndHeader(
                     "direct:getVkUserInfo",
                     request,
                     "vk_service_token",
                     serviceToken,
                     VkUser.class
             );
+
+            if (result == null) {
+                throw new RuntimeException("Failed to get user info from VK API");
+            }
+
+            return result;
         } catch (Exception e) {
             log.error("VK API call failed for user: {}, group: {}", userId, groupId, e);
             throw extractVkException(e);

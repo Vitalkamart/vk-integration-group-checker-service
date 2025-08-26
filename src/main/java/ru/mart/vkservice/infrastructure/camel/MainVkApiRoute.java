@@ -21,7 +21,7 @@ public class MainVkApiRoute extends RouteBuilder {
                 // Генерируем ключ кэша
                 .setProperty("cacheKey", simple("vk_user_${body.userId}_group_${body.groupId}"))
 
-                // Сохраняем оригинальный запрос
+                // Сохраняем оригинальный запрос и токен
                 .setProperty("originalRequest", body())
                 .setProperty("serviceToken", header("vk_service_token"))
 
@@ -30,15 +30,15 @@ public class MainVkApiRoute extends RouteBuilder {
                 .choice()
                 .when(body().isNotNull())
                 .log("✅ Данные найдены в кэше")
-                .unmarshal().json() // Преобразуем JSON обратно в объект
+                // Обрабатываем данные из кэша
+                .to("direct:processCachedResponse")
                 .stop() // Завершаем обработку
-                .end()
-
-                // Если дошли сюда, значит кэш пустой
+                .otherwise()
                 .log("❌ Данных нет в кэше, запрос к VK API")
+                // Восстанавливаем оригинальный запрос
+                .setBody(exchangeProperty("originalRequest"))
 
                 // Получаем информацию о пользователе
-                .setBody(exchangeProperty("originalRequest"))
                 .to("direct:getUserInfo")
 
                 // Проверяем членство в группе
@@ -51,8 +51,10 @@ public class MainVkApiRoute extends RouteBuilder {
                 // Сохраняем финальный ответ в property
                 .setProperty("finalResponse", body())
 
-                // Сохраняем в кэш (маршалим в JSON)
+                // Сохраняем в кэш (маршалим в JSON и преобразуем в строку)
                 .marshal().json()
+                .convertBodyTo(String.class)
+                .log("Сохранение в кэш: ключ=${exchangeProperty.cacheKey}, значение=${body}")
                 .setHeader("cacheKey", exchangeProperty("cacheKey"))
                 .setHeader("cacheTtl", constant(cacheTtlMinutes * 60))
                 .to("direct:saveToCache")
@@ -60,7 +62,8 @@ public class MainVkApiRoute extends RouteBuilder {
                 // Возвращаем оригинальный ответ
                 .setBody(exchangeProperty("finalResponse"))
                 .log("✅ Данные получены из VK API и сохранены в кэш")
+                .end()
 
-                .log("Успешно обработан запрос для пользователя: ${body.firstName} ${body.lastName}");
+                .log("Успешно обработан запрос");
     }
 }
