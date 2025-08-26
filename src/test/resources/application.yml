@@ -1,31 +1,12 @@
 spring:
-  config:
-    activate:
-      on-profile: test
   security:
     user:
       name: test-user
       password: test-password
-      roles: USER
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-    deserialization:
-      fail-on-unknown-properties: false
-    serialization:
-      write-dates-as-timestamps: false
 
 vk:
   api:
-    base-url: https://api.vk.com/method
-    version: 5.199
     service-token: test-token
-
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
 
 camel:
   springboot:
@@ -34,5 +15,5 @@ camel:
 logging:
   level:
     ru.mart.vkservice: DEBUG
-    org.springframework: WARN
-    org.apache.camel: WARN
+    org.springframework.security: TRACE
+    org.apache.camel: TRACE
