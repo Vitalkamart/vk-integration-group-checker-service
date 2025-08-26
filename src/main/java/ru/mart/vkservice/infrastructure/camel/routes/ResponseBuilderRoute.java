@@ -2,12 +2,12 @@ package ru.mart.vkservice.infrastructure.camel.routes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.camel.Exchange;
+import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 import ru.mart.vkservice.domain.model.VkUser;
-import ru.mart.vkservice.infrastructure.camel.BaseVkRouteBuilder;
 
 @Component
-public class ResponseBuilderRoute extends BaseVkRouteBuilder {
+public class ResponseBuilderRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {

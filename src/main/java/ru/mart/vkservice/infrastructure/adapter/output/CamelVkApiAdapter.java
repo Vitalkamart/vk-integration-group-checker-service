@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.ProducerTemplate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import ru.mart.vkservice.domain.model.VkUser;
@@ -18,6 +19,7 @@ public class CamelVkApiAdapter {
 
     private final ProducerTemplate producerTemplate;
 
+    @Cacheable(value = "vkUsers", key = "#userId + '_' + #groupId", unless = "#result == null")
     public VkUser getUserInfoWithMembership(
             @NotNull @Positive Long userId,
             @NotNull @Positive Long groupId,

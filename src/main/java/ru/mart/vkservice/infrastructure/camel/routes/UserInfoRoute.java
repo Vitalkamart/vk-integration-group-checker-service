@@ -2,13 +2,13 @@ package ru.mart.vkservice.infrastructure.camel.routes;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.camel.Exchange;
+import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
-import ru.mart.vkservice.infrastructure.camel.BaseVkRouteBuilder;
 import ru.mart.vkservice.infrastructure.exception.VkApiException;
 
 @Component
-public class UserInfoRoute extends BaseVkRouteBuilder {
+public class UserInfoRoute extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
@@ -17,7 +17,7 @@ public class UserInfoRoute extends BaseVkRouteBuilder {
                 .log("Получение информации о пользователе: ${body.userId}")
 
                 .setHeader("CamelHttpMethod", constant("GET"))
-                .toD("https://api.vk.com/method/users.get?user_ids=${body.userId}&fields=first_name,last_name,middle_name&access_token=${exchangeProperty.serviceToken}&v=" + VK_API_VERSION)
+                .toD("https://api.vk.com/method/users.get?user_ids=${body.userId}&fields=first_name,last_name,middle_name&access_token=${exchangeProperty.serviceToken}&v=5.199")
                 .unmarshal().json(JsonLibrary.Jackson, JsonNode.class)
                 .process(this::processUserInfoResponse);
     }

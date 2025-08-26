@@ -7,24 +7,27 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.mart.vkservice.infrastructure.adapter.output.UserGroupRequest;
+import ru.mart.vkservice.infrastructure.config.TestContainersConfig;
 import ru.mart.vkservice.infrastructure.exception.VkApiException;
 import ru.mart.vkservice.testUtil.CamelTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Testcontainers
+@Import(TestContainersConfig.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserInfoRouteTest {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private CamelContext camelContext;
-
     @Autowired
     private ProducerTemplate producerTemplate;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void getUserInfo_ValidResponse_ProcessesSuccessfully() throws Exception {

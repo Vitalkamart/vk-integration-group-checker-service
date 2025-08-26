@@ -8,6 +8,16 @@ spring:
     user:
       name: admin
       password: password
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
+
+cache:
+  ttl:
+    minutes: 1
 
 vk:
   api:

@@ -3,6 +3,14 @@ spring:
     user:
       name: test-user
       password: test-password
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+
+cache:
+  ttl:
+    minutes: 1
 
 vk:
   api:
@@ -15,5 +23,6 @@ camel:
 logging:
   level:
     ru.mart.vkservice: DEBUG
-    org.springframework.security: TRACE
-    org.apache.camel: TRACE
+    org.springframework.security: DEBUG
+    org.apache.camel: DEBUG
+    org.springframework.data.redis: TRACE
