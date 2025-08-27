@@ -60,6 +60,7 @@ kubectl create secret generic vk-secrets --from-literal=service-token='your_toke
 # Проверка секрета
 kubectl get secrets
 kubectl describe secret vk-secrets
+
 📡 API Endpoints
 Основной endpoint
 text
@@ -72,13 +73,16 @@ vk_service_token: ваш_токен
   "user_id": 123,
   "group_id": 456
 }
+
 Управление кэшем
 text
 POST /api/v1/cache/clear
 POST /api/v1/cache/clear-all
+
 Swagger документация
 text
 /swagger-ui.html
+
 🧪 Тестирование
 Тестовый запрос
 bash
@@ -92,6 +96,7 @@ curl -X POST \
   -H "vk_service_token: ваш_токен" \
   -d '{"user_id":1,"group_id":1}' \
   $SERVICE_URL/api/v1/vk-users/info
+  
 Проверка кэша
 bash
 # Port-forward Redis
@@ -99,6 +104,7 @@ kubectl port-forward svc/redis 6379:6379
 
 # Проверить ключи в Redis
 kubectl exec -it deployment/redis -- redis-cli KEYS *
+
 🛠️ Команды управления
 Мониторинг
 bash
@@ -128,6 +134,7 @@ minikube stop
 
 # Полная очистка
 minikube delete --all --purge
+
 📊 Проверка работы
 Проверьте статус подов:
 
@@ -162,6 +169,7 @@ kubectl get events
 
 # Доступ к Redis CLI
 kubectl exec -it deployment/redis -- redis-cli
+
 📝 Примечания
 Сервис использует Basic Authentication: admin/password
 
