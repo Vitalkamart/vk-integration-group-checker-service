@@ -18,11 +18,14 @@ docker run -d --name redis -p 6379:6379 redis:7-alpine
 
 # Запуск приложения
 ./gradlew bootRun -Dspring.data.redis.host=localhost
+
 Или с Docker Compose:
 
 bash
 docker-compose up --build
+
 Развертывание в Minikube
+
 Запустите Minikube:
 
 bash
@@ -31,10 +34,12 @@ minikube start --driver=docker
 
 bash
 minikube docker-env | Invoke-Expression
+
 Соберите Docker образ:
 
 bash
 docker build -t vk-user-service:latest .
+
 Создайте секрет с VK токеном:
 
 bash
@@ -44,8 +49,11 @@ kubectl create secret generic vk-secrets --from-literal=service-token='your_vk_s
 bash
 kubectl apply -f redis-deployment.yaml
 kubectl apply -f vk-service-deployment.yaml
+
 🔧 Конфигурация
+
 Environment Variables
+
 SPRING_DATA_REDIS_HOST: Redis хост (по умолчанию: redis)
 
 SPRING_DATA_REDIS_PORT: Redis порт (по умолчанию: 6379)
@@ -53,15 +61,20 @@ SPRING_DATA_REDIS_PORT: Redis порт (по умолчанию: 6379)
 VK_API_SERVICE_TOKEN: Сервисный токен VK (через секрет)
 
 Secrets Management
+
 bash
 # Создание секрета
+
 kubectl create secret generic vk-secrets --from-literal=service-token='your_token'
 
 # Проверка секрета
+
 kubectl get secrets
+
 kubectl describe secret vk-secrets
 
 📡 API Endpoints
+
 Основной endpoint
 text
 POST /api/v1/vk-users/info
@@ -84,6 +97,7 @@ text
 /swagger-ui.html
 
 🧪 Тестирование
+
 Тестовый запрос
 bash
 # Получить URL сервиса
@@ -106,6 +120,7 @@ kubectl port-forward svc/redis 6379:6379
 kubectl exec -it deployment/redis -- redis-cli KEYS *
 
 🛠️ Команды управления
+
 Мониторинг
 bash
 # Статус подов
@@ -136,6 +151,7 @@ minikube stop
 minikube delete --all --purge
 
 📊 Проверка работы
+
 Проверьте статус подов:
 
 bash
@@ -152,6 +168,7 @@ minikube service vk-user-service
 Откройте http://<minikube-ip>/swagger-ui.html
 
 🐛 Troubleshooting
+
 Common Issues
 ImagePullBackOff: Убедитесь, что imagePullPolicy: Never установлен
 
@@ -171,6 +188,7 @@ kubectl get events
 kubectl exec -it deployment/redis -- redis-cli
 
 📝 Примечания
+
 Сервис использует Basic Authentication: admin/password
 
 Кэш автоматически очищается через 1 минуту
