@@ -10,8 +10,8 @@ spring:
       password: password
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
   cache:
     type: redis
 

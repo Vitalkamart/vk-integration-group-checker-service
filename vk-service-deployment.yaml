@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vk-user-service
+  labels:
+    app: vk-user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vk-user-service
+  template:
+    metadata:
+      labels:
+        app: vk-user-service
+    spec:
+      containers:
+        - name: vk-user-service
+          image: vk-user-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATA_REDIS_HOST
+              value: "redis"
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+            - name: VK_API_SERVICE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vk-secrets
+                  key: service-token
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vk-user-service
+spec:
+  selector:
+    app: vk-user-service
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
